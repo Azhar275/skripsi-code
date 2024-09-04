@@ -1,0 +1,109 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2>Camera List</h2>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#addCameraModal">+ Add Camera</button>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <!-- <th scope="col">Type</th> -->
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Example data -->
+            {% for i in cameraList %}
+            <tr>
+                <td><a href="{{i.cameraUrl}}">{{i.cameraName}}</a>
+                    {% if camera == i.id  %}
+                     (active)
+                    {% endif %}
+                </td>
+                <!-- <td>Youtube</td> -->
+                <td>
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editCameraModal{{i.id}}">Edit</button>
+                    {% if camera != i.id  %}
+                        <button class="btn btn-danger btn-sm">
+                            <a href="/delete_camera/{{i.id}}" style="text-decoration: none; color: white;">Delete</a>
+                        </button>
+                    {% else %}
+                        <button class="btn btn-danger btn-sm" disabled>
+                            Delete
+                        </button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+</div>
+  <!-- Modal -->
+  <div class="modal fade" id="addCameraModal" tabindex="-1" aria-labelledby="newCameraModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newCameraModalLabel">Input Camera Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="saveCamera" action="/add_camera" method="post">
+                    <div class="mb-3">
+                        <label for="cameraName" class="form-label">Camera Name</label>
+                        <input type="text" class="form-control" id="cameraName" name="cameraName" placeholder="Enter camera name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cameraUrl" class="form-label">Camera Type</label>
+                        <input type="text" class="form-control" id="cameraUrl" name="cameraUrl" placeholder="Enter camera url" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% for i in cameraList %}
+
+<div class="modal fade" id="editCameraModal{{i.id}}" tabindex="-1" aria-labelledby="newCameraModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newCameraModalLabel">Input Camera Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="saveCamera" action="/edit_camera/{{i.id}}" method="post">
+                    <div class="mb-3">
+                        <label for="cameraName" class="form-label">Camera Name</label>
+                        <input type="text" class="form-control" id="cameraName" name="cameraName" placeholder="Enter camera name" value="{{i.cameraName}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cameraUrl" class="form-label">Camera Type</label>
+                        <input type="text" class="form-control" id="cameraUrl" name="cameraUrl" placeholder="Enter camera url" value="{{i.cameraUrl}}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}

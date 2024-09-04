@@ -1,0 +1,33 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Content Row -->
+
+                    <div class="row">
+
+                        <!-- Area Chart -->
+                        <div class="col-xl-12">
+                            <div class="card shadow mb-4">
+                                <img src="{{ url_for('video_feed_testing') }}" width="100%">
+                                <!-- <img src="https://cdn.osxdaily.com/wp-content/uploads/2013/12/there-is-no-connected-camera-mac.jpg" width="100%"> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="downloadDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Pilih Kamera
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="cameraDropdown">
+                        {% for i in cameraList %}
+                            <a href="{{ url_for('analytics', id=i.id) }}" class="dropdown-item">{{i.cameraName}}</a>
+                        {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+{% endblock %}

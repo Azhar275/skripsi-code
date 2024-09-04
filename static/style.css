@@ -1,0 +1,348 @@
+.kotak {
+  width: fit-content;
+  height: 440px;
+  position: relative;
+}
+/* Styling The Adjustable Square */
+.handle {
+  position: absolute;
+  border: 0.2em solid yellow;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#theSVG{
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* z-index: 1; */
+}
+
+#saveButton{
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#manageButton{
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 5px;
+}
+
+#camSettingsButton{
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 5px;
+}
+
+#limitSetting{
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 5px;
+}
+
+.action {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  width: 50px;
+  height: 50px;
+  background: #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.action span {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 2em;
+  transition: 0.3s ease-in-out;
+}
+
+.action.active {
+  transform: scale(1.1);
+  transition: 0.1s ease-in;
+}
+
+.action #guide {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  background: #007bff;
+  min-width: 250px;
+  padding: 20px;
+  border-radius: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+}
+
+.action.active #guide {
+  bottom: 0px;
+  right: 60px;
+  min-width: 500px;
+  opacity: 1;
+  color: #fff;
+  visibility: visible;
+  transition: 0.3s;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+aside {
+  margin-bottom: 10px;
+}
+
+aside .drop-btn {
+  min-width: 360px;
+  background: #2f56c8;
+  border-radius: 5px;
+  line-height: 50px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  padding: 0 20px;
+  cursor: pointer;
+}
+
+aside .drop-btn:hover {  
+  background: #2f55c8d5;
+}
+
+aside .drop-btn span {
+  float: right;
+  line-height: 50px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+aside .wrapper {
+  position: relative;
+  top: 5px;
+  display: flex;
+  width: 360px;
+  height: fit-content;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #345bcc;
+  display: none;
+  transition: all 0.3s ease;
+}
+
+aside .wrapper.show {
+  display: block;
+  display: flex;
+}
+
+.wrapper ul {
+  width: 360px;
+  list-style: none;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
+
+/* .wrapper ul li {
+  line-height: 55px;
+} */
+
+/* .wrapper p {
+  line-height: 25px;
+  vertical-align: middle;
+  padding-top: 5px; */
+  /* align-self: center;
+  justify-content: center; */
+/* } */
+
+.wrapper .guide-gif {
+  justify-content: center;
+}
+
+.wrapper .menu-bar li a {
+  position: relative;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 10px;
+  display: flex;
+  border-radius: 8px;
+  align-items: center;
+  text-decoration: none;
+  justify-content: flex-end;
+}
+
+.wrapper .setting-drop li.setting-item a {
+  position: relative;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 10px;
+  display: flex;
+  border-radius: 8px;
+  align-items: center;
+  text-decoration: none;
+  justify-content: flex-start;
+}
+
+.wrapper .setting-drop li a .item-ket1,
+.wrapper .setting-drop li a .item-ket2,
+.wrapper .setting-drop li a .item-ket3 {
+  position: relative;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 10px;
+  display: flex;
+  align-items: center;
+  background: #4674ff;
+  margin-top: 8px;
+  border-radius: 8px 8px 0px 0px;
+}
+
+.wrapper .setting-drop li a {
+  text-decoration: none;
+  /* border-radius: 8px 0px 8px 8px; */
+}
+
+.wrapper ul li .desc {
+  position: relative;
+  color: #000;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 10px;
+  display: flex;
+  border-radius: 0px 0px 8px 8px;
+  align-items: center;
+  text-decoration: none;
+  background: #ffea2c;
+  margin-bottom: 5px;
+}
+
+/* .wrapper ul li:hover a {
+  background: #2c50bb;
+} */
+
+.wrapper ul li a .icon {
+  height: 30px;
+  width: 30px;
+  margin-right: 13px;
+  background: #ffffff1a;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.wrapper ul li a .icon span {
+  line-height: 30px;
+  font-size: 15px;
+  color: #fff;
+}
+
+.wrapper ul li .desc span {
+  /* line-height: 30px; */
+  font-size: 24px;
+  color: #000;
+  margin-left: 5px;
+  margin-right: 15px;
+}
+
+.wrapper ul.menu-bar li a i {
+  /* position: absolute;
+  right: 10px; */
+  margin-left: 7px;
+  font-size: 25px;
+  pointer-events: none;
+}
+
+.wrapper ul.setting-drop li a i {
+  /* position: absolute;
+  right: 10px; */
+  margin-left: 7px;
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.wrapper ul.setting-drop {
+  display: none;
+}
+
+.wrapper ul li .desc-ket1,
+.wrapper ul li .desc-ket2,
+.wrapper ul li .desc-ket3 {
+  position: relative;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 10px;
+  border-radius: 0px 0px 8px 8px;
+  align-items: center;
+  text-decoration: none;
+  background: #ffea2c;
+  margin-bottom: 5px;
+  display: none;
+}
+
+.wrapper ul li .desc-ket1.show,
+.wrapper ul li .desc-ket2.show,
+.wrapper ul li .desc-ket3.show {
+  display: block;
+}
+
+.wrapper ul.setting-drop li a i {
+  position: absolute;
+  right: 15px;
+  margin-left: 7px;
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.wrapper ul.setting-drop li.arrow a span {
+  position: absolute;
+  left: 5px;
+  margin-left: 7px;
+  font-size: 25px;
+  pointer-events: none;
+}
+
+/* .wrapper .arrow {
+  padding-left: 10px;
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 10px;
+  display: inline-block;
+  vertical-align: middle;
+} */
+
+/* .wrapper .setting-drop li.arrow a i {
+  margin-right: 8px;
+  font-size: 25px;
+} */
+
+.wrapper .setting-drop li.arrow a {
+  /* position: relative; */
+  margin-top: 10px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 10px;
+  display: flex;
+  border-radius: 8px;
+  align-items: center;
+  text-decoration: none;
+  /* justify-content: flex-start; */
+}
+

@@ -1,0 +1,71 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid row justify-content-center">
+        <!-- DataTales Example -->
+        <div class="card mt-6 shadow w-50">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                <h3 class="m-0 font-weight-bold text-primary">Profile</h3>
+            </div>
+            <div class="card-body">
+                {% if alert %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>{{ alert }}</strong>
+                </div>
+                {% endif %}
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" value="{{ session.username }}" aria-label="Disabled input example" disabled readonly>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" value="{{ session.stars }}" aria-label="Disabled input example" disabled readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#btn_edit{{ session.username }}">
+                    Edit
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    
+    <!-- Edit Modal -->
+    <div class="modal fade" id="btn_edit{{ session.username }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/editprofile" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title fs-5" id="btn_editUser">Edit User</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="new_username" class="form-label">Username Baru</label>
+                            <input name="new_username" type="text" class="form-control" id="new_username" placeholder="Masukkan username baru" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">Password Baru</label>
+                            <input name="new_password" type="password" class="form-control" id="new_password" placeholder="Masukkan password baru" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="conf_new_password" class="form-label">Konfirmasi Password Baru</label>
+                            <input name="conf_new_password" type="password" class="form-control" id="conf_new_password" placeholder="Konfirmasi password baru" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="old_password" class="form-label">Validasi Password Saat Ini</label>
+                            <input name="old_password" type="password" class="form-control" id="old_password" placeholder="Validasi password saat ini" required>
+                        </div>  
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Ubah</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

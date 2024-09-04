@@ -1,0 +1,96 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}User{% endblock %}
+
+{% block content %}
+                <!-- Begin Page Content -->
+                <div class="container-fluid row justify-content-center">
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-6 w-50">
+                        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                            <h3 class="m-0 font-weight-bold text-primary">Users</h3>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#btn_addUser">
+                                + Tambah User
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th style="width:60%">Username</th>
+                                            <th>Tindakan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for dt in data %}
+                                        <tr>
+                                            <th>{{ loop.index }}</th>
+                                            <td>{{ dt.username }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#btn_editUser{{ dt.id }}">
+                                                    Edit
+                                                </button>
+                                                <!-- Edit Modal -->
+                                                <div class="modal fade" id="btn_editUser{{ dt.id }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title fs-5" id="btn_editUser">Edit User</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="/edituser/{{ dt.id }}" method="post">
+                                                            <div class="mb-3">
+                                                                <label for="edit_username" class="form-label">Username</label>
+                                                                <input name="edit_username" type="text" class="form-control" id="edit_username" value="{{ dt.username }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="edit_password" class="form-label">Password</label>
+                                                                <input name="edit_password" type="password" class="form-control" id="edit_password" value="" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Ubah</button>
+                                                        </div>
+                                                        </form>
+                                                        </div>
+                                                        </div>
+                                                </div>
+                                                
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#btn_deleteUser{{ dt.id }}">
+                                                    Hapus
+                                                </button>
+                                                <!-- Delete Modal. User bisa menghapus dirinya sendiri tp lgsg logout. Hanya admin yang bisa lihat semua user -->
+                                                <div class="modal fade" id="btn_deleteUser{{ dt.id }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title fs-5" id="btn_delete">Konfirmasi hapus</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <h5>Yakin ingin menghapus?</h5>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <a href="/deleteuser/{{ dt.id }}" class="btn btn-danger">Ya, hapus</a>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+{% endblock %}

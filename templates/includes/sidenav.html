@@ -1,0 +1,48 @@
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url_for('dashboard')}}">
+        <img src="{{ url_for('static', filename = 'img/enpemo.png') }}" class="navbar-brand-img h-100" alt="main_logo">
+        <div class="sidebar-brand-text mx-3">ENPEMO</sup></div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item{% if request.path == url_for('dashboard') %} active{% endif %}">
+        <a class="nav-link" href="{{url_for('dashboard')}}">
+            <i class="fas fa-fw fa-chart-bar"></i>
+            <span>Rekap Data</span></a>
+    </li>
+
+    <li class="nav-item{% if request.path.startswith(url_for('analytics', id=session['camera'])) %} active{% endif %}">
+        <a class="nav-link" href="{{url_for('analytics', id=session['camera'])}}">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Perhitungan</span></a>
+    </li>
+
+    <li class="nav-item{% if request.path.startswith(url_for('settings', id=session['camera']))%} active{% endif %}">
+        <a class="nav-link" href="{{url_for('settings', id=session['camera'])}}">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Pengaturan</span></a>
+    </li>
+
+    <!-- Nav Item - User -->
+    <!-- {% if session.id == 1 %}
+    <li class="nav-item{% if request.path == url_for('user') %} active{% endif %}">
+        <a class="nav-link" href="{{url_for('user')}}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>User</span></a>
+    </li>
+    {% endif %} -->
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>

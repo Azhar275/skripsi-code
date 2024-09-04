@@ -1,0 +1,317 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Settings{% endblock %}
+{%block javascript_custom%}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+
+<script type="text/javascript">
+    function draggablePolygon(polygon) {
+      var points = polygon.points;
+      var svgRoot = $(polygon).closest("svg");
+      var container = document.querySelector(".container");
+      console.log(svgRoot)
+    
+      for (var i = 0; i < points.numberOfItems; i++) {
+        (function (i) {
+          var point = points.getItem(i);
+    
+          var handle = document.createElement("div");
+          handle.className = "handle";
+          container.appendChild(handle); // Menambahkan handle sebagai anak elemen SVG
+    
+          var base = svgRoot.position(); //posisi koordinat horizontal dan vertikal diukur dari atas dan kiri halaman web
+          var cs = window.getComputedStyle(handle, null); //properti (panjang, lebar, ketebalan) handler
+          base.left = (parseInt(cs.width) + parseInt(cs.borderLeftWidth) + parseInt(cs.borderRightWidth))/2; //posisi horizontal (jarak/margin) frame dari halaman web sebelah kiri, diperoleh dari setengah lebar handler
+          base.top = (parseInt(cs.height) + parseInt(cs.borderTopWidth) + parseInt(cs.borderBottomWidth))/2; //posisi vertikal (jarak/margin) frame dari halaman web sebelah atas, diperoleh dari setengah tinggi handler
+        
+          // mengatur posisi handler agar sama dengan titik poligon
+          handle.style.left = (point.x - base.left) + "px"; // posisi horizontal handler sama dengan titik poligon, diperoleh dengan menambahkan margin kiri dengan x titik poligon (tidak relatif terhadap poligon, relatif terhadap halaman web)
+          handle.style.top = (point.y - base.top) + "px"; // posisi vertikal handler sama dengan titik poligon - - -
+    
+          $(handle).draggable({
+            containment: container, // Batasi pergerakan handler ke dalam elemen SVG
+            drag: function (event) {
+              setTimeout(function () {
+                point.x = parseInt(handle.style.left) + base.left; // posisi horizontal titik poligon berubah, diperoleh dengan x handler dikurangi margin kiri frame
+                point.y = parseInt(handle.style.top) + base.top; // posisi vertikal - - -
+    
+                updatedCoordinates = getPolygonCoordinates();
+                console.log("Updated Coordinates: ", updatedCoordinates);
+              }, 0);
+            }
+          });
+        })(i);
+      }
+    }
+    
+      function getPolygonCoordinates(){
+        var polygon=document.getElementById("x"); //get the specified polygon
+        return polygon.getAttribute("points"); //get the points attribute of the polygon
+      }
+      
+      //save data on "click" using event listener
+      // on click (saveButton) -> fill data using updatedCoordinates -> submit form (saveForm)
+      $(document).ready(function(){
+        $("#saveButton").on("click",function(event){
+          event.preventDefault() //prevent the default action of the button
+          console.log("On Click Value: ", updatedCoordinates)
+          if(updatedCoordinates!==null){
+            //set value in the hidden input field with updated coordinates
+            $("#coordinatesInput").val(updatedCoordinates)
+            //submit the form
+            $("#saveForm").submit()
+          }
+        })
+      })
+    
+    function actionToggle(){
+      var action = document.querySelector('.action');
+      action.classList.toggle('active')
+    }
+</script>
+{%endblock%}
+{% block content %}
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Content Row -->
+
+                    <div class="row">
+
+                        <!-- Area Chart -->
+                        <div class="col-xl-8 col-lg-7">
+                            <div class="container kotak">
+                                <img id="theSVG" src="
+                                {% if all_camera  %}
+                                    {{ url_for('background_feed') }}
+                                {% else %}
+                                    {{ url_for('video_feed') }}
+                                {% endif %}
+                                " width="100%" height="440">
+                                <!-- <img id="theSVG" src="https://cdn.osxdaily.com/wp-content/uploads/2013/12/there-is-no-connected-camera-mac.jpg" width="100%" height="440"> -->
+                                <svg id="theSVG" width="100%" height="440" style="border: 2px inset #8c6868;">
+                                    <polygon id="x" points="{{data['x1']}},{{data['y1']}} {{data['x2']}},{{data['y2']}} {{data['x3']}},{{data['y3']}} {{data['x4']}},{{data['y4']}}" style="opacity: 50%;"/>
+                                </svg>
+                            </div>
+                                <div style="display: flex;justify-content: space-between;">
+                                  <div id="limitSetting">
+                                    <form action="/submit_limit" method="post">
+                                      <label for="limit">Limit:</label>
+                                      <input type="number" id="limit" name="limit" step="1" size="3">
+                                      <button type="submit" class="btn btn-success text-end">Submit</button>
+                                    </form>
+                                </div>
+                                <div style="display: flex;">
+                                  <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" id="camSettingsButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Pilih Kamera
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="cameraDropdown">
+                                    {% for i in cameraList %}
+                                        <a href="{{ url_for('settings', id=i.id) }}" class="dropdown-item">{{i.cameraName}}</a>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                  <button class="btn btn-primary" type="button" id="manageButton">
+                                    <a href="{{ url_for('camera') }}" style="text-decoration: none; color: white;">Atur Kamera</a>
+                                  </button>
+                                </div>
+                                <form id="saveForm" action="/submit_coordinates" method="post">
+                                  <input type="hidden" id="coordinatesInput" name="coordinates" value="">
+                                  <button class="btn btn-success text-end" id="saveButton" type="submit">Save Coordinates</button>
+                                </form>
+                              </div>
+                              </div>
+                              
+                                                            <script type="text/javascript">
+                                draggablePolygon(document.getElementById("x"));
+                              </script>
+                          
+                              
+                              <script src="{{ url_for('static', filename='script.js') }}"></script>                   
+                        </div>
+
+                        <!-- Panduan -->
+                        <aside>
+
+                          <div class="drop-btn">
+                            Panduan Pengguna 
+                            <span class="fas fa-question-circle"></span>
+                          </div>
+
+                          <div class="wrapper">
+                            <ul class="menu-bar">
+                              <li class="guide-gif">
+                                <img src="{{ url_for('static', filename='guidev3.gif') }}" class="card-img-top" alt="...">
+                                <!-- <a href="#"> -->
+                                  <div class="desc"><span class="fas fa-exclamation-circle"></span>Geser titik-titik kuning untuk mengubah zona perhitungan</div>
+                                <!-- </a> -->
+                              </li>
+                              <li class="setting-item">
+                                <a href="#">
+                                  <u>Keterangan</u><i class="fas fa-angle-right"></i>
+                                </a>
+                              </li>
+                            </ul>
+                              <!-- Settings & privacy Menu-items -->
+                            <ul class="setting-drop">
+                              <!-- <li class="arrow back-setting-btn"><span class="fas fa-arrow-left"></span>Keterangan</li> -->
+                              <!-- <li class="guide-gif">
+                                <img src="{{ url_for('static', filename='guidev2.gif') }}" class="card-img-top" alt="...">
+                              </li> -->
+                              <li>
+                                <a href="#">
+                                  <div class="item-ket1" style="background: rgba(0, 0, 0, 0.6);">
+                                    <div class="icon"><span class="fas fa-vector-square"></span></div>
+                                    Zona Hitung <i class="fas fa-chevron-down"></i>
+                                  </div>
+                                  <div class="desc-ket1" style="background: rgba(0, 0, 0, 0.4);">
+                                      <strong>Zona Hitung</strong> digunakan sebagai indikator untuk menghitung orang saat melintasi zona tersebut. Zona Hitung dapat diubah sesuai kebutuhan dengan menggeser sudut-sudutnya yang berupa titik-titik kuning.
+                                  </div>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="#">
+                                  <div class="item-ket3" style="background: rgb(255, 0, 0, 0.7);">
+                                    <div class="icon"><span class="far fa-window-minimize fa-rotate-180"></span></div>
+                                    Garis Merah<i class="fas fa-chevron-down"></i>
+                                  </div>
+                                  <div class="desc-ket3" style="background: rgba(255, 0, 0, 0.5);">
+                                    <strong>Garis Merah</strong> digunakan sebagai indikator untuk mengetahui bahwa orang tersebut sedang berjalan keluar dari area. Garis Merah dapat diatur menyesuaikan arus keluar orang pada suatu tempat dengan mengikuti pengaturan salah satu sisi Zona Hitung.
+                                  </div>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="#">
+                                  <div class="item-ket2" style="background: rgba(0, 255, 0, 0.7);">
+                                    <div class="icon"><span class="far fa-window-minimize"></span></div>
+                                    Garis Hijau <i class="fas fa-chevron-down"></i>
+                                  </div>
+                                  <div class="desc-ket2" style="background: rgba(0, 255, 0, 0.5);">
+                                    <strong>Garis Hijau</strong> digunakan sebagai indikator untuk mengetahui bahwa orang tersebut sedang berjalan masuk ke dalam area. Garis Hijau dapat diatur menyesuaikan arus masuk orang pada suatu tempat dengan mengikuti pengaturan salah satu sisi Zona Hitung.
+                                  </div>
+                                </a>
+                              </li>
+                              <li class="arrow back-setting-btn">
+                                <a href="#">
+                                  <span class="fas fa-angle-left"></span><div style="margin-left: 13px;"><u>Kembali</u></div>
+                                </a>
+                              </li>
+                              <!-- <li class="arrow back-setting-btn">
+                                <span class="fas fa-angle-left"></span>Keterangan
+                              </li> -->
+                            </ul>
+                          </div>
+                          
+                      </aside>
+
+                    </div>
+
+                </div>
+
+                <!-- /.container-fluid -->
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+      function draggablePolygon(polygon) {
+      var points = polygon.points;
+      var svgRoot = $(polygon).closest("svg"); //svg frame yang menampung poligon
+    
+      for (var i = 0; i < points.numberOfItems; i++) {
+        (function (i) {
+          var point = points.getItem(i);
+        
+          //bikin handler untuk menggeser titik poligon
+          var handle = document.createElement("div");
+          handle.className = "handle";
+          document.body.appendChild(handle);
+        
+          // mengatur posisi frame di halaman web, relatif dengan halaman web
+          var base = svgRoot.position(); //posisi koordinat horizontal dan vertikal diukur dari atas dan kiri halaman web
+          var cs = window.getComputedStyle(handle, null); //properti (panjang, lebar, ketebalan) handler
+          base.left -= (parseInt(cs.width) + parseInt(cs.borderLeftWidth) + parseInt(cs.borderRightWidth))/2; //posisi horizontal (jarak/margin) frame dari halaman web sebelah kiri, diperoleh dari setengah lebar handler
+          base.top -= (parseInt(cs.height) + parseInt(cs.borderTopWidth) + parseInt(cs.borderBottomWidth))/2; //posisi vertikal (jarak/margin) frame dari halaman web sebelah atas, diperoleh dari setengah tinggi handler
+        
+          // mengatur posisi handler agar sama dengan titik poligon
+          handle.style.left = base.left + point.x + "px"; // posisi horizontal handler sama dengan titik poligon, diperoleh dengan menambahkan margin kiri dengan x titik poligon (tidak relatif terhadap poligon, relatif terhadap halaman web)
+          handle.style.top = base.top + point.y + "px"; // posisi vertikal handler sama dengan titik poligon - - -
+        
+          $(handle).draggable({ 
+            drag: function (event) {
+              setTimeout(function () {
+                //mengatur titik poligon setelah handler digeser/dipindah
+                point.x = parseInt(handle.style.left) - base.left; // posisi horizontal titik poligon berubah, diperoleh dengan x handler dikurangi margin kiri frame
+                point.y = parseInt(handle.style.top) - base.top; // posisi vertikal - - -
+                
+                updatedCoordinates=getPolygonCoordinates()
+                console.log("Updated Coordinates: ", updatedCoordinates)
+              },0);
+            }
+          });
+        }(i));
+      }
+    }
+    function getPolygonCoordinates(){
+      var polygon=document.getElementById("x");
+      return polygon.getAttribute("points");
+    }
+    
+    $(document).ready(function(){
+      $("#saveButton").on("click",function(event){
+        event.preventDefault()
+        console.log("On Click Value: ", updatedCoordinates)
+        if(updatedCoordinates!==null){
+          $("#coordinatesInput").val(updatedCoordinates)
+          $("#saveForm").submit()
+        }
+      })
+    })
+  </script>
+
+  <script type='text/javascript'>
+    const drop_btn = document.querySelector(".drop-btn");
+    const menu_wrapper = document.querySelector(".wrapper");
+    const menu_bar = document.querySelector(".menu-bar");
+    const setting_drop = document.querySelector(".setting-drop");
+    const setting_item = document.querySelector(".setting-item");
+    const setting_btn = document.querySelector(".back-setting-btn");
+
+    drop_btn.onclick = (()=>{
+      menu_wrapper.classList.toggle("show");
+    });
+
+    setting_item.onclick = (()=>{
+      menu_bar.style.marginLeft = "-360px";
+      setTimeout(()=>{
+        setting_drop.style.display = "block";
+      }, 100);
+    });
+
+    setting_btn.onclick = (()=>{
+      menu_bar.style.marginLeft = "0px";
+      setting_drop.style.display = "none";
+    });
+
+    const desc_ket1 = document.querySelector(".desc-ket1");
+    const desc_ket2 = document.querySelector(".desc-ket2");
+    const desc_ket3 = document.querySelector(".desc-ket3");
+    const item_ket1 = document.querySelector(".item-ket1");
+    const item_ket2 = document.querySelector(".item-ket2");
+    const item_ket3 = document.querySelector(".item-ket3");
+
+    item_ket1.onclick = (()=>{
+      desc_ket1.classList.toggle("show");
+    });
+
+    item_ket2.onclick = (()=>{  
+      desc_ket2.classList.toggle("show");
+    });
+
+    item_ket3.onclick = (()=>{  
+      desc_ket3.classList.toggle("show");
+    });
+  </script>
+{% endblock %}

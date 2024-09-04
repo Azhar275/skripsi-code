@@ -1,0 +1,16 @@
+# Ignore virtual environment folders
+env/
+venv/
+dev2/
+
+# Ignore Python cache folders
+__pycache__/
+
+# Ignore Learning folder
+Learning/
+
+video/
+
+createdb.py
+
+static/guidev2.gif
